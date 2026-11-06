@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Couple Game — Ular Tangga Truth or Dare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff7fa;--bg2:#f3ecff;--card:#ffffffe6;--ink:#3b2a47;--muted:#8a7796;--line:#efe1ee;--pink:#ec7fa6;--pink-s:#ffe4ee;--pur:#8f6fd0;--pur-s:#efe8ff;--cell:#fffafc;--cell2:#faf6ff;--shadow:0 14px 40px #6a4a7a1c;--ladder:#8f6fd0;--snake:#ec7fa6;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1e1626;--bg2:#271c33;--card:#2b2037e6;--ink:#f5ecfa;--muted:#b4a1c2;--line:#443455;--pink:#f08fb2;--pink-s:#4a2a3c;--pur:#a98ae6;--pur-s:#3a2c52;--cell:#30243c;--cell2:#352a44;--shadow:0 14px 40px #0006;--ladder:#a98ae6;--snake:#f08fb2}}
+:root[data-theme="dark"]{--bg:#1e1626;--bg2:#271c33;--card:#2b2037e6;--ink:#f5ecfa;--muted:#b4a1c2;--line:#443455;--pink:#f08fb2;--pink-s:#4a2a3c;--pur:#a98ae6;--pur-s:#3a2c52;--cell:#30243c;--cell2:#352a44;--shadow:0 14px 40px #0006;--ladder:#a98ae6;--snake:#f08fb2}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{min-height:100vh;color:var(--ink);font-family:'Nunito',system-ui,sans-serif;background:radial-gradient(circle at 8% 0,var(--pink-s),transparent 34%),radial-gradient(circle at 95% 15%,var(--bg2),transparent 36%),var(--bg)}
+.wrap{max-width:1100px;margin:auto;padding:28px 18px 48px}
+.hero{text-align:center;margin-bottom:24px}
+.eyebrow{display:inline-block;padding:6px 14px;border-radius:99px;background:var(--card);border:1px solid var(--line);color:var(--pink);font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase}
+h1{font:700 clamp(34px,6vw,54px)/1.1 'Fraunces',Georgia,serif;margin:14px 0 8px}
+h1 span{background:linear-gradient(100deg,var(--pur),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:0;color:var(--muted);font-size:14px}
+.layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,.7fr);gap:20px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);padding:18px;backdrop-filter:blur(8px)}
+.bh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;font-weight:800;font-size:14px}
+.legend{display:flex;gap:12px;color:var(--muted);font-size:11px;font-weight:700}
+.legend i{display:inline-block;width:14px;height:5px;border-radius:9px;margin-right:5px;vertical-align:middle}
+.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;position:relative}
+.cell{aspect-ratio:1.08;border-radius:15px;border:1px solid var(--line);background:var(--cell);padding:7px;display:flex;flex-direction:column;justify-content:space-between;min-width:0;position:relative}
+.cell:nth-child(even){background:var(--cell2)}
+.cell.l{box-shadow:inset 0 0 0 2px var(--pur-s)}.cell.s{box-shadow:inset 0 0 0 2px var(--pink-s)}
+.num{font-size:11px;font-weight:800;color:var(--muted)}
+.kind{font-size:10px;font-weight:800;color:var(--muted);line-height:1.1}
+.cell.l .kind{color:var(--ladder)}.cell.s .kind{color:var(--snake)}
+.pawns{display:flex;gap:3px;position:relative;z-index:2}
+.pawn{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;border:2px solid #fff;box-shadow:0 2px 6px #0003}
+.p0{background:var(--pink)}.p1{background:var(--pur)}
+svg.over{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.side{display:flex;flex-direction:column;gap:14px}
+.nameform,.players{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.nameform{margin-bottom:12px}
+label{display:block;font-size:10px;font-weight:800;letter-spacing:.8px;color:var(--muted);margin-bottom:5px}
+input{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--cell);color:var(--ink);font:700 13px 'Nunito',sans-serif;outline:none}
+input:focus{border-color:var(--pur)}
+.player{padding:12px;border-radius:16px;border:1px solid var(--line);background:var(--cell);transition:.2s}
+.player.on{border-color:var(--pur);background:var(--pur-s);transform:translateY(-2px)}
+.player small{display:block;font-size:10px;font-weight:800;color:var(--muted);margin-bottom:3px}
+.player b{font-size:14px;overflow-wrap:anywhere}.player div{font-size:11px;color:var(--muted);margin-top:4px}
+.dicebox{text-align:center;border-radius:24px;padding:18px;background:linear-gradient(145deg,var(--pink-s),var(--pur-s));border:1px solid var(--line)}
+.turn{font-size:12px;font-weight:800;color:var(--muted);margin-bottom:12px}
+.dice{width:84px;height:84px;margin:0 auto 12px;border-radius:22px;background:var(--cell);box-shadow:var(--shadow);display:grid;place-items:center;font-size:56px;line-height:1;color:var(--ink)}
+.dice.r{animation:sh .13s infinite alternate}@keyframes sh{from{transform:rotate(-12deg) scale(.95)}to{transform:rotate(12deg) scale(1.05)}}
+button{border:0;border-radius:14px;padding:13px 16px;font:800 13px 'Nunito',sans-serif;cursor:pointer;transition:.2s;color:var(--ink)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.primary{width:100%;color:#fff;background:linear-gradient(100deg,var(--pur),var(--pink));box-shadow:0 8px 18px #b07bc933}
+.primary:not(:disabled):hover{transform:translateY(-2px)}
+.sec{background:var(--card);border:1px solid var(--line)}
+.acts{display:flex;gap:8px;margin-top:9px}.acts button{flex:1;padding:11px 8px;font-size:12px}
+.task{border-radius:22px;padding:18px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);min-height:190px}
+.tt{display:flex;justify-content:space-between;align-items:center}
+.tag{font-size:10px;font-weight:800;letter-spacing:1.2px;padding:6px 11px;border-radius:99px;background:var(--pur-s);color:var(--pur)}
+.tag.dare{background:var(--pink-s);color:var(--pink)}
+.task h2{font:700 20px 'Fraunces',Georgia,serif;margin:12px 0 8px}
+.task p{margin:0;font-size:14px;line-height:1.6;color:var(--muted)}
+.hint{font-size:11px;color:var(--muted);margin-top:12px;opacity:.85}
+.rules{font-size:12px;line-height:1.75;color:var(--muted)}.rules b{color:var(--ink)}
+.modal{position:fixed;inset:0;background:#2a1c3699;display:none;place-items:center;padding:18px;z-index:9}.modal.show{display:grid}
+.mc{max-width:380px;width:100%;background:var(--card);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:26px;padding:26px;text-align:center;box-shadow:var(--shadow)}
+.mc h2{font:700 27px 'Fraunces',Georgia,serif;margin:6px 0 8px}.mc p{font-size:13px;color:var(--muted);line-height:1.6}
+@media(max-width:780px){.layout{grid-template-columns:1fr}.wrap{padding:18px 12px 36px}.panel{padding:13px}.board{gap:5px}.cell{border-radius:10px;padding:5px}.pawn{width:18px;height:18px;font-size:9px}.kind{font-size:9px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero"><span class="eyebrow">A little game for two ♡</span><h1><span>Couple</span> Game</h1><p>Ular tangga + Truth or Dare. Lempar dadu, jalan bersama, dan kenali satu sama lain!</p></header>
+<div class="layout">
+<section class="panel">
+ <div class="bh"><span>🎀 Papan perjalanan kalian</span><div class="legend"><span><i style="background:var(--ladder)"></i>Tangga</span><span><i style="background:var(--snake)"></i>Ular</span></div></div>
+ <div class="board" id="board"></div>
+</section>
+<aside class="side">
+ <section class="panel">
+  <div class="nameform">
+   <div><label for="name1">PEMAIN 1</label><input id="name1" value="Kamu" maxlength="14"></div>
+   <div><label for="name2">PEMAIN 2</label><input id="name2" value="Pasangan" maxlength="14"></div>
+  </div>
+  <div class="players">
+   <div class="player on" id="card0"><small>🌷 PEMAIN 1</small><b id="label0">Kamu</b><div id="pos0">Kotak 1</div></div>
+   <div class="player" id="card1"><small>💜 PEMAIN 2</small><b id="label1">Pasangan</b><div id="pos1">Kotak 1</div></div>
+  </div>
+ </section>
+ <section class="dicebox">
+  <div class="turn" id="turn">Giliran: Kamu</div><div class="dice" id="dice">⚀</div>
+  <button class="primary" id="roll">🎲 Kocok dadu</button>
+  <div class="acts"><button class="sec" id="next" disabled>Lanjut →</button><button class="sec" id="skip" disabled>Ganti tantangan</button><button class="sec" id="reset">↻ Ulang</button></div>
+ </section>
+ <section class="task" aria-live="polite">
+  <div class="tt"><span class="tag" id="tag">MULAI</span><span>♡</span></div>
+  <h2 id="tt">Siap memulai?</h2><p id="tx">Masukkan nama kalian, lalu kocok dadu untuk memulai permainan.</p><div class="hint">Boleh dilewati atau diganti kalau tantangannya kurang nyaman.</div>
+ </section>
+ <section class="panel rules"><b>Cara main</b><br>1. Bergantian mengocok dadu.<br>2. Pion berjalan otomatis sesuai angka dadu.<br>3. Setiap mendarat, lakukan Truth atau Dare yang muncul.<br>4. Tangga membuatmu naik, ular membuatmu turun.<br>5. Yang lebih dulu mencapai kotak 30 menang!<br><br>♡ Main dengan saling menghargai.</section>
+</aside>
+</div>
+</div>
+<div class="modal" id="modal"><div class="mc"><div style="font-size:44px">🏆</div><h2 id="wt">Kalian menang!</h2><p id="wx">Permainan selesai.</p><button class="primary" id="again" style="margin-top:12px">Main lagi ♡</button></div></div>
+<script>
+const truths=["Hal kecil apa tentang aku yang paling kamu rinduin?","Siapa yang lebih bucin di antara kita?","Sebutin 3 hal yang bikin kamu jatuh cinta sama aku.","Apa ketakutan terbesarmu soal hubungan ini?","Apa batasan dalam hubungan yang nggak boleh aku lewati?","Pernah ngerasa kurang diperhatiin sama aku? Kapan?","Hal apa dari aku yang paling pengen kamu ubah?","Apa momen paling bikin kamu yakin sama aku?","Kamu lebih takut kehilangan aku atau disakiti aku?","Pernah ngerasa sendirian meskipun punya aku?","Kalau suatu hari kita gagal, menurutmu penyebab besarnya apa?","Menurutmu, aku lebih sering nyakitin kamu lewat kata atau sikap?","Pernah kepikiran buat mengakhiri hubungan ini?","Apa bagian dari dirimu yang paling berubah sejak sama aku?","Apa hal paling egois yang pernah kamu lakuin di hubungan ini?","Kamu masih jatuh cinta, atau lagi berusaha mempertahankan?"];
+const dares=["Kirim foto senyum kamu sekarang.","Screenshot chat favorit kita & jelasin kenapa.","Tulis 1 kalimat jujur tentang perasaanmu hari ini.","Kirim emoji yang paling ngegambarin aku.","Kirim foto benda yang bikin kamu inget aku.","Ceritain kenangan lucu kita (atau yang hampir).","Tulis 3 hal kecil yang pengen kita lakuin bareng nanti.","Kirim GIF yang paling mirip kepribadian aku.","Bikin TikTok velocity (Aku dipuja puja tante).","Kirim foto benda yang bakal kamu simpan lama.","Tulis 1 hal yang bikin kamu bangga dari diri kamu.","Tulis 1 kalimat janji yang kamu yakin bisa kamu jaga.","Bikin video bilang “Pasangan gw paling cakepp ilop u”."];
+const tasks=[...truths.map(t=>["TRUTH",t]),...dares.map(t=>["DARE",t])];
+let deck=[];
+function draw1(){if(!deck.length){deck=tasks.map((_,k)=>k);for(let k=deck.length-1;k>0;k--){const j=Math.random()*(k+1)|0;[deck[k],deck[j]]=[deck[j],deck[k]]}}return deck.pop()}
+const ladders={3:11,8:16,15:23,20:28},snakes={17:7,24:12,29:19},faces=["⚀","⚁","⚂","⚃","⚄","⚅"];
+let pos=[1,1],turn=0,busy=false,wait=false,done=false,cur=null;
+const $=id=>document.getElementById(id);
+const nm=i=>($("name"+(i+1)).value.trim()||"Pemain "+(i+1)).slice(0,14);
+function build(){
+ const b=$("board");b.innerHTML="";
+ for(let r=5;r>=0;r--)for(let c=0;c<5;c++){
+  const n=r%2===0?r*5+c+1:r*5+(5-c);
+  const d=document.createElement("div");d.className="cell"+(ladders[n]?" l":snakes[n]?" s":"");d.id="c"+n;
+  const k=ladders[n]?"↑ "+ladders[n]:snakes[n]?"↓ "+snakes[n]:n===1?"MULAI":n===30?"FINISH ♡":n%5===0?"♡":"";
+  d.innerHTML=`<span class="num">${n}</span><span class="kind">${k}</span><span class="pawns" id="p${n}"></span>`;
+  b.appendChild(d);
+ }
+ const s=document.createElementNS("http://www.w3.org/2000/svg","svg");s.setAttribute("class","over");s.id="ov";b.appendChild(s);
+ render();draw();
+}
+function ctr(n){const e=$("c"+n);return[e.offsetLeft+e.offsetWidth/2,e.offsetTop+e.offsetHeight/2]}
+function draw(){
+ const s=$("ov");let h="";
+ for(const a in ladders){
+  const[x1,y1]=ctr(+a),[x2,y2]=ctr(ladders[a]);const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,nx=-uy*7,ny=ux*7;
+  h+=`<g stroke="var(--ladder)" stroke-linecap="round" opacity=".55"><line x1="${x1+nx}" y1="${y1+ny}" x2="${x2+nx}" y2="${y2+ny}" stroke-width="3"/><line x1="${x1-nx}" y1="${y1-ny}" x2="${x2-nx}" y2="${y2-ny}" stroke-width="3"/>`;
+  for(let t=18;t<L-8;t+=20){const px=x1+ux*t,py=y1+uy*t;h+=`<line x1="${px+nx}" y1="${py+ny}" x2="${px-nx}" y2="${py-ny}" stroke-width="2.5"/>`}
+  h+="</g>";
+ }
+ for(const a in snakes){
+  const[x1,y1]=ctr(+a),[x2,y2]=ctr(snakes[a]);const mx=(x1+x2)/2,my=(y1+y2)/2,dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1,nx=-dy/L*26,ny=dx/L*26;
+  h+=`<path d="M${x1} ${y1} C${mx+nx} ${my+ny},${mx-nx} ${my-ny},${x2} ${y2}" fill="none" stroke="var(--snake)" stroke-width="6" stroke-linecap="round" stroke-dasharray="1 10" opacity=".6"/><circle cx="${x1}" cy="${y1}" r="6" fill="var(--snake)" opacity=".75"/>`;
+ }
+ s.innerHTML=h;
+}
+function render(){
+ for(let n=1;n<=30;n++)$("p"+n).innerHTML="";
+ pos.forEach((p,i)=>{const e=document.createElement("span");e.className="pawn p"+i;e.textContent=i+1;$("p"+p).appendChild(e)});
+ for(let i=0;i<2;i++){$("label"+i).textContent=nm(i);$("pos"+i).textContent="Kotak "+pos[i];$("card"+i).classList.toggle("on",turn===i)}
+ $("turn").textContent="Giliran: "+nm(turn);
+}
+function show(type,title,body){$("tag").textContent=type;$("tag").className="tag"+(type==="DARE"?" dare":"");$("tt").textContent=title;$("tx").textContent=body}
+function roll(){
+ if(busy||wait||done)return;busy=true;$("roll").disabled=true;$("dice").classList.add("r");let t=0;
+ const a=setInterval(()=>{$("dice").textContent=faces[Math.random()*6|0];if(++t>=10){clearInterval(a);$("dice").classList.remove("r");const n=(Math.random()*6|0)+1;$("dice").textContent=faces[n-1];move(n)}},85);
+}
+function move(n){
+ const target=Math.min(30,pos[turn]+n);
+ const s=setInterval(()=>{pos[turn]++;render();if(pos[turn]>=target){clearInterval(s);land(target,n)}},180);
+}
+function land(sq,r){
+ const i=turn;let f=sq,ex="";
+ if(ladders[sq]){f=ladders[sq];ex=`Naik tangga ke kotak ${f}! `}else if(snakes[sq]){f=snakes[sq];ex=`Ups, terkena ular! Turun ke kotak ${f}. `}
+ if(f!==sq)setTimeout(()=>{pos[i]=f;render();end(r,ex)},550);else end(r,ex);
+}
+function end(r,ex){
+ const i=turn;cur=draw1();const[t,b]=tasks[cur];
+ show(t,`${nm(i)} mendapat ${t==="TRUTH"?"Truth":"Dare"}!`,`${ex}Dadu: ${r}. ${b}`);
+ wait=true;busy=false;$("next").disabled=false;$("skip").disabled=false;
+ if(pos[i]>=30){done=true;$("roll").disabled=true;$("next").disabled=true;$("skip").disabled=true;$("wt").textContent=nm(i)+" menang!";$("wx").textContent="Berhasil mencapai kotak terakhir. Kasih hadiah kecil atau pelukan untuk pemenang ♡";$("modal").classList.add("show")}
+}
+function skip(){
+ const type=tasks[cur][0];const pool=tasks.map((x,k)=>k).filter(k=>tasks[k][0]===type&&k!==cur);
+ cur=pool[Math.random()*pool.length|0];show(type,`${nm(turn)} mendapat ${type==="TRUTH"?"Truth":"Dare"} baru!`,tasks[cur][1]);
+}
+function next(){turn=1-turn;wait=false;$("next").disabled=true;$("skip").disabled=true;$("roll").disabled=done;render()}
+function reset(){deck=[];pos=[1,1];turn=0;busy=wait=done=false;$("dice").textContent="⚀";$("roll").disabled=false;$("next").disabled=true;$("skip").disabled=true;$("modal").classList.remove("show");show("MULAI","Siap memulai?","Masukkan nama kalian, lalu kocok dadu untuk memulai permainan.");render()}
+$("roll").onclick=roll;$("next").onclick=next;$("skip").onclick=skip;$("reset").onclick=reset;$("again").onclick=reset;
+["name1","name2"].forEach(id=>$(id).addEventListener("input",render));
+addEventListener("resize",draw);
+build();document.fonts&&document.fonts.ready.then(draw);
+</script>
+</body>
+</html>
